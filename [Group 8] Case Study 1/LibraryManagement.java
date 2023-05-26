@@ -4,7 +4,7 @@ public class LibraryManagement {
     public static void main(String[] args) {
         Scanner in=new Scanner(System.in);
         System.out.println("Library Management System\n");
-        //empty library to store and manage books.
+        //library to store and manage books.
         Library library= new Library ();
         boolean exit=false;
         //Keep asking the user for input until they choose the exit.
@@ -19,20 +19,14 @@ public class LibraryManagement {
             int choice = in.nextInt();
             in.nextLine();
             if(choice == 1) {
-                System.out.print("ID: ");
-                int id = in.nextInt();
-                in.nextLine();
                 System.out.print("Title: ");
                 String title = in.nextLine();
                 System.out.print("Author: ");
                 String author = in.nextLine();
                 //Once the new book added the availability of the book automatically set to Available
                 String status = "Available";
-                if (library.addBook(id, title, author, status)) {
+                library.addBook(title, author, status);
                     System.out.println("A new book successfully added to library.\n");
-                }else{
-                    System.out.println("The ID "+id+" already exist.");
-                }
             }
             else if (choice == 2) {
                 System.out.println("Enter book ID you want to remove.");
@@ -82,8 +76,10 @@ public class LibraryManagement {
 class Book{
     private String title, author, status;
     private int id;
-    public Book(int id, String title, String author, String status){
-        this.id=id;
+    // incId use for the id to automatically incremented.
+    private static int incId = 1;
+    public Book(String title, String author, String status){
+        this.id=incId++;
         this.title=title;
         this.author=author;
         this.status=status;
@@ -104,23 +100,20 @@ class Book{
         this.status = status;
     }
 }
-//this class user to manage books in library.
+//this class use to manage books in library.
 class Library{
     private List<Book> books;
     public Library(){
         books = new ArrayList<>();
     }
     //Add new book.
-    public boolean addBook(int id, String title, String author, String status ){
-        for(Book book : books){
-            if(book.getID() == id){
-                return false;
-            }
-        }
-        Book newBook = new Book(id, title, author, status);
+    public void addBook(String title, String author, String status ){
+        Book newBook = new Book(title, author, status);
         books.add(newBook);
-        return true;
     }
+
+    //this method use to delete books. if the book is available it will return true and delete
+    // the book, else it returns false and print message.
     public boolean deleteBooks(int id){
         for(Book book : books){
             if(book.getID() == (id) &&(book.getStatus().equalsIgnoreCase("Available"))){
@@ -130,6 +123,8 @@ class Library{
         }
         return false;
     }
+    //this method use for borrowing the book, if the book status is available it returns
+    // true and set status to not available. else it returns false and print message.
     public boolean borrowBooks(int id){
         for(Book book : books){
             if((book.getID() == id)&&(book.getStatus().equalsIgnoreCase("Available"))){
@@ -139,6 +134,8 @@ class Library{
         }
         return false;
     }
+    //this method use for returning books. after returning the book the status will change no available.
+    // if the user input id doesn't exist in the list it will return false and print message.
     public boolean returnBooks(int id){
         for(Book book : books){
             if(book.getID()==id){
@@ -154,8 +151,6 @@ class Library{
         System.out.printf("|%-3s|%-15s|%-15s|%-10s|%n", "ID", "Title", "Author", "Status");
         System.out.printf("------------------------------------------------%n");
 
-        //sort() method automatically incremented the book's id.
-        Collections.sort(books, Comparator.comparing(Book::getID));
         for (Book book : books){
             System.out.printf("|%-3s|%-15s|%-15s|%-10s|%n",book.getID(), book.getTitle(), book.getAuthor(), book.getStatus());
         }

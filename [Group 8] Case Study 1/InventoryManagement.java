@@ -6,7 +6,7 @@ public class InventoryManagement {
         Scanner in = new Scanner(System.in);
         System.out.println("Inventory Management\n");
 
-        // Empty inventory to store and manage items
+        //inventory to store and manage items
         Inventory inventory = new Inventory();
 
         // Keep asking the user for input until they choose the exit.
@@ -19,7 +19,7 @@ public class InventoryManagement {
 
             try {
                 int choice = in.nextInt();
-                in.nextLine(); // Consume the newline character
+                in.nextLine();
 
                 switch (choice) {
                     case 1:
@@ -27,7 +27,7 @@ public class InventoryManagement {
                         String name = in.nextLine();
                         System.out.print("Enter the quantity: ");
                         int quantity = in.nextInt();
-                        in.nextLine(); // Consume the newline character
+                        in.nextLine();
 
                         // Create a new item and add it to the inventory
                         Item item = new Item(name, quantity);
@@ -36,7 +36,6 @@ public class InventoryManagement {
                         System.out.println("Item added to the inventory.\n");
                         break;
                     case 2:
-                        //Remove item from inventory.
                         System.out.println("Enter the item to remove.");
                         String itemName = in.nextLine();
 
