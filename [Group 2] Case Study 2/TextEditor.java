@@ -6,6 +6,7 @@ import java.io.*;
 public class TextEditor extends JFrame {
     private JTextArea textArea;
     private JFileChooser fileChooser;
+    private File openedFile; // Track the opened file
 
     public TextEditor() {
         setTitle("Text Editor");
@@ -50,9 +51,9 @@ public class TextEditor extends JFrame {
         fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
+            openedFile = fileChooser.getSelectedFile();
             try {
-                File file = fileChooser.getSelectedFile();
-                BufferedReader reader = new BufferedReader(new FileReader(file));
+                BufferedReader reader = new BufferedReader(new FileReader(openedFile));
                 String line;
                 StringBuilder content = new StringBuilder();
                 while ((line = reader.readLine()) != null) {
@@ -67,11 +68,54 @@ public class TextEditor extends JFrame {
     }
 
     private void saveFile() {
+        if (openedFile != null) {
+            saveExistingFile();
+        } else {
+            saveNewFile();
+        }
+    }
+
+    private void saveExistingFile() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(openedFile));
+            writer.write(textArea.getText());
+            writer.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving file", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void saveNewFile() {
         fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int option = fileChooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             try {
                 File file = fileChooser.getSelectedFile();
+                String filePath = file.getAbsolutePath();
+
+                // Check if the filename contains spaces or special characters
+                if (filePath.contains(" ") || !filePath.matches("^[a-zA-Z0-9.-_ -]+$")) {
+                    JOptionPane.showMessageDialog(this, "Invalid filename", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Save as .txt for new file
+                if (!filePath.endsWith(".txt")) {
+                    filePath += ".txt";
+                    file = new File(filePath);
+                }
+
+                // Check if the file already exists
+                int count = 1;
+                while (file.exists()) {
+                    String newFilePath = filePath.substring(0, filePath.lastIndexOf('.'));
+                    String extension = filePath.substring(filePath.lastIndexOf('.'));
+                    newFilePath += "(" + count + ")" + extension;
+                    file = new File(newFilePath);
+                    count++;
+                }
+
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                 writer.write(textArea.getText());
                 writer.close();
