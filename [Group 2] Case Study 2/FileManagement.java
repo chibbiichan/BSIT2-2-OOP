@@ -13,7 +13,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class FileManagagement extends JFrame {
+public class FileManagement extends JFrame {
 
     private JTextArea fileDisplayArea;
     private JButton browseImageButton;
