@@ -25,7 +25,7 @@ public class FileManagement extends JFrame {
     private JFXPanel videoPanel;
     private MediaPlayer mediaPlayer;
 
-    public FileManagagement() {
+    public FileManagement() {
         super("File Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
